@@ -5,12 +5,10 @@ class PageConvert extends React.Component {
     render() {
         return (
             <div className="page-convert">
-                <h1 className="text-center">Convert currency</h1>
+                <h2 className="text-center">Convert currency</h2>
 
                 <div className="row">
 
-                    
-                    
                 </div>
             </div>
         )

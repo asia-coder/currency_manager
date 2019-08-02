@@ -1,21 +1,26 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 
-class CCardCurrency extends React.Component {
+class CCardCurrency extends React.Component<any, any> {
 
-    render() {
-        return (
-            <div className="card text-center">
-                <div className="card-header">
-                    <h5 className="mb-0">USD</h5>
-                </div>
-                <div className="card-body">
-                    <h5 className="card-title">United State America</h5>
-                    <Link to="/" className="btn btn-primary">Go</Link>
-                </div>
-            </div>
-        )
-    }
+  render() {
+    return (
+      <div className="card text-center">
+        <div className="row p-2 align-items-center">
+          <div className="col-sm">
+            <h5 className="mb-0">{this.props.currencyName}</h5>
+          </div>
+          <div className="col-sm">
+            =
+          </div>
+          <div className="col-sm">
+            <h6 className="mb-0">{this.props.currencyValue}</h6>
+          </div>
+        </div>
+        <Link to="/convert" className="btn btn-primary m-2">Convert to</Link>
+      </div>
+    )
+  }
 }
 
 export default CCardCurrency
