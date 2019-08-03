@@ -8,13 +8,13 @@ class CCardCurrency extends React.Component<any, any> {
       <div className="card text-center">
         <div className="row p-2 align-items-center">
           <div className="col-sm">
-            <h5 className="mb-0">{this.props.currencyName}</h5>
+            <h5 className="mb-0">{this.props.title}</h5>
           </div>
           <div className="col-sm">
             =
           </div>
           <div className="col-sm">
-            <h6 className="mb-0">{this.props.currencyValue}</h6>
+            <h6 className="mb-0">{this.props.amount}</h6>
           </div>
         </div>
         <Link to="/convert" className="btn btn-primary m-2">Convert to</Link>

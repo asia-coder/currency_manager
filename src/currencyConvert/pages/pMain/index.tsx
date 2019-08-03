@@ -1,57 +1,49 @@
 import * as React from 'react'
-import CurrencyRequest from '../../libs/CurrencyRequest'
 import CCardCurrency from '../../components/CCardCurrency'
+import {inject, observer} from "mobx-react";
 
-class PageMain extends React.Component {
+@inject('currencyCollection')
+@observer
+class PageMain extends React.Component<any, any> {
 
   state = {
-    error: null,
-    currencies: [],
     userCurrency: '',
     isLoaded: false
-  }
+  };
 
   componentDidMount() {
-    const data = CurrencyRequest.getAllCurrencies();
-    data
-        .then(res => {
-          this.setState({
-            isLoaded: true,
-            currencies: res.rates,
-            userCurrency: res.base
-          })
-        },
-        error => {
-          this.setState({
-            isLoaded: true,
-            error: error
-          })
-        });
+
+  }
+
+  componentWillReceiveProps(nextProps: Readonly<any>, nextContext: any): void {
+
   }
 
   getItemList() {
-    const { currencies } = this.state;
+    const { currencyCollection } = this.props;
+    const currenciesList = currencyCollection.getCollection;
+
     const list: any = [];
 
-    Object.entries(currencies).forEach(([key, value]) => {
+    for (let prop in currenciesList) {
       list.push(
-        <div key={key} className="col-sm-3 mb-4">
-          <CCardCurrency currencyName={key} currencyValue={value} />
+        <div key={prop} className="col-sm-3 mb-4">
+          <CCardCurrency {...currenciesList[prop]} />
         </div>
       );
-    })
+    }
 
     return list;
   }
 
   render() {
-    const { isLoaded } = this.state;
+    const isLoaded = false;
 
     return (
       <div className="page-main">
         <h2 className="text-center mb-4">Currencies list</h2>
 
-        {!isLoaded ? (
+        {isLoaded ? (
           <div className="text-center">Loading...</div>
         ) : (
           <div className="row">
