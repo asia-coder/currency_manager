@@ -1,5 +1,6 @@
 import {observable, computed, action, toJS} from 'mobx';
 import CurrencyRequest from '../../libs/CurrencyRequest';
+import StoreService from '../../libs/storage';
 
 class Currency {
     id: string;
@@ -32,8 +33,26 @@ class Currency {
 class CurrencyCollection {
   @observable currencies = new Map();
 
+  @observable currentCurrency: string = '';
+
   constructor() {
+    if (!StoreService.hasCurrentCurrency()) {
+      StoreService.setCurrentCurrency('UZS');
+    }
+
+    const currentCurrency: string = StoreService.getCurrentCurrency();
+    this.setCurrentCurrency(currentCurrency);
+
     this.getRequestCurrencies();
+  }
+
+  @action
+  setCurrentCurrency(currency: string) {
+    this.currentCurrency = currency.toUpperCase();
+  }
+
+  get getCurrentCurrency() {
+    return this.currentCurrency;
   }
 
   getCurrency(id: string) {

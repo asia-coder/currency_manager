@@ -38,10 +38,11 @@ class PageMain extends React.Component<any, any> {
 
   render() {
     const isLoaded = false;
+    const { currencyCollection } = this.props;
 
     return (
       <div className="page-main">
-        <h2 className="text-center mb-4">Currencies list</h2>
+        <h2 className="text-center mb-4">Currencies list [{currencyCollection.getCurrentCurrency}]</h2>
 
         {isLoaded ? (
           <div className="text-center">Loading...</div>
