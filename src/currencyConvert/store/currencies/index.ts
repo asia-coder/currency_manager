@@ -51,6 +51,7 @@ class CurrencyCollection {
     this.currentCurrency = currency.toUpperCase();
   }
 
+  @computed
   get getCurrentCurrency() {
     return this.currentCurrency;
   }

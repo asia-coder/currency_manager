@@ -1,23 +1,19 @@
 import * as React from 'react'
 import CCardCurrency from '../../components/CCardCurrency'
-import {inject, observer} from "mobx-react";
+import { Intent, Spinner } from "@blueprintjs/core";
+import {inject, observer} from "mobx-react"
+
+/*export interface IPropsCurrencies {
+  currencyCollection: CurrencyCollection
+}*/
 
 @inject('currencyCollection')
 @observer
 class PageMain extends React.Component<any, any> {
 
   state = {
-    userCurrency: '',
     isLoaded: false
   };
-
-  componentDidMount() {
-
-  }
-
-  componentWillReceiveProps(nextProps: Readonly<any>, nextContext: any): void {
-
-  }
 
   getItemList() {
     const { currencyCollection } = this.props;
@@ -37,17 +33,20 @@ class PageMain extends React.Component<any, any> {
   }
 
   render() {
-    const isLoaded = false;
     const { currencyCollection } = this.props;
+    const isLoaded = currencyCollection.currenciesCount > 0;
 
     return (
       <div className="page-main">
         <h2 className="text-center mb-4">Currencies list [{currencyCollection.getCurrentCurrency}]</h2>
 
-        {isLoaded ? (
-          <div className="text-center">Loading...</div>
+        {!isLoaded ? (
+          <div className="text-center">
+            <Spinner intent={Intent.PRIMARY}/>
+          </div>
         ) : (
           <div className="row">
+
             {this.getItemList()}
           </div>
         )}
