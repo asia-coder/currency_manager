@@ -8,34 +8,31 @@ export interface ICurrencies {
   text: string;
 }
 
-const currencies: ICurrencies[] = [
-  { title: 'UZS', text: 'Uzbekistan' },
-  { title: 'USD', text: 'United State' },
-  { title: 'RUB', text: 'Russia' },
-];
+const currencies: ICurrencies[] = [];
 
 export const renderCurrency: ItemRenderer<ICurrencies> = (currency, { handleClick, modifiers, query }) => {
   if (!modifiers.matchesPredicate) {
-    return null;
+      return null;
   }
-  const text = `${currency.title}.`;
+
+  const text = `${currency.text}`;
   return (
     <MenuItem
-      label={currency.text.toString()}
+      active={modifiers.active}
+      disabled={modifiers.disabled}
+      label={text}
+      text={text}
       key={currency.title}
     />
   );
 };
 
-export const filterCurrency: ItemPredicate<ICurrencies> = (query, currency, _index, exactMatch) => {
+export const filterCurrency: ItemPredicate<ICurrencies> = (query, currency) => {
   const normalizedTitle = currency.title.toLowerCase();
+  const normalizedText = currency.text.toLowerCase();
   const normalizedQuery = query.toLowerCase();
 
-  if (exactMatch) {
-    return normalizedTitle === normalizedQuery;
-  } else {
-    return `${currency.title}. ${normalizedTitle} ${currency.text}`.indexOf(normalizedQuery) >= 0;
-  }
+  return `${normalizedTitle} ${normalizedText}`.indexOf(normalizedQuery) !== -1;
 };
 
 export const currencySelectProps = {
@@ -48,6 +45,18 @@ export const currencySelectProps = {
 @observer
 class PageConvert extends React.Component<any, any> {
 
+  getItemList() {
+    const { currencyCollection } = this.props;
+    const currenciesList = currencyCollection.getCollection;
+
+    for (let prop in currenciesList) {
+        currencySelectProps.items.push({
+          title: currenciesList[prop]['title'],
+          text: currenciesList[prop]['fullName']
+      });
+    }
+  }
+
   changeSelect = () => {
 
   };
@@ -55,8 +64,8 @@ class PageConvert extends React.Component<any, any> {
   render() {
     const { currencyCollection } = this.props;
     const isLoaded = currencyCollection.currenciesCount > 0;
-
     const CurrencySelect = Select.ofType<ICurrencies>();
+    this.getItemList();
 
     return (
       <div className="page-convert">
