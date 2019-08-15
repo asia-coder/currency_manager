@@ -7,11 +7,19 @@ class CurrencyRequest {
   }
 
   static async getAllCurrencies() {
-    const url: string = CurrencyRequest.getRequestURL('latest.json');
+    const action: string = 'latest.json';
+    const url: string = CurrencyRequest.getRequestURL(action);
     const response = await fetch(url);
-    const data: any = await response.json();
 
-    return data;
+    return await response.json();
+  }
+
+  static async getAllCurrenciesFullName() {
+    const action: string = 'currencies.json';
+    const url: string = CurrencyRequest.getRequestURL(action);
+    const response = await fetch(url);
+
+    return await response.json();
   }
 }
 

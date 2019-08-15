@@ -33,12 +33,21 @@ class Currency {
 class CurrencyCollection {
   @observable currencies = new Map();
 
+  @observable currenciesFullNames = new Map();
+
   @observable currentCurrency: string = '';
 
   constructor() {
     if (!StoreService.hasCurrentCurrency()) {
       StoreService.setCurrentCurrency('UZS');
     }
+
+    if (!StoreService.hasCurrenciesFullName) {
+      this.getRequestCurrenciesFullNames();
+    }
+
+    const currenciesFullNames: object = StoreService.getCurrenciesFullName;
+    this.setFullNamesCollections(currenciesFullNames);
 
     const currentCurrency: string = StoreService.getCurrentCurrency();
     this.setCurrentCurrency(currentCurrency);
@@ -77,6 +86,31 @@ class CurrencyCollection {
     data.then(res => {
       this.setCollections(res.rates);
     });
+  }
+
+  getRequestCurrenciesFullNames() {
+    const data = CurrencyRequest.getAllCurrenciesFullName();
+
+    data.then(res => {
+      this.setFullNamesCollections(res);
+    });
+  }
+
+  @action
+  setFullNamesCollections(currenciesFullNames: any) {
+    let currenciesArray = new Map();
+
+    Object.entries(currenciesFullNames).forEach(([key, value]) => {
+      currenciesArray.set(key, value);
+    });
+
+    this.currenciesFullNames = currenciesArray;
+    StoreService.setCurrenciesFullName(JSON.stringify(this.getFullNamesCollection));
+  }
+
+  @computed
+  get getFullNamesCollection() {
+    return toJS(this.currenciesFullNames);
   }
 
   @action

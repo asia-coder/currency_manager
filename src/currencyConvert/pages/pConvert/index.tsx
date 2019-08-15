@@ -48,6 +48,8 @@ class PageConvert extends React.Component<any, any> {
   getItemList() {
     const { currencyCollection } = this.props;
     const currenciesList = currencyCollection.getCollection;
+    const currenciesFullNamesList = currencyCollection.getFullNamesCollection;
+    console.log(currenciesFullNamesList);
 
     for (let prop in currenciesList) {
         currencySelectProps.items.push({
