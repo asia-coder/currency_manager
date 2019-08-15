@@ -25,7 +25,7 @@ class StorageService {
   }
 
   static get getCurrenciesFullName(): object {
-    return this.getStorageItem('currencies_full_names');
+    return JSON.parse(this.getStorageItem('currencies_full_names'));
   }
 
   static get hasCurrenciesFullName(): boolean {

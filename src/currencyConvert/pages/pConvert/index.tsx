@@ -2,10 +2,11 @@ import * as React from 'react'
 import {inject, observer} from "mobx-react";
 import { Intent, Spinner, MenuItem, Button } from "@blueprintjs/core";
 import { Select, ItemRenderer, ItemPredicate } from "@blueprintjs/select";
+import {toJS} from "mobx";
 
 export interface ICurrencies {
   title: string;
-  text: string;
+  fullName: string;
 }
 
 const currencies: ICurrencies[] = [];
@@ -15,12 +16,12 @@ export const renderCurrency: ItemRenderer<ICurrencies> = (currency, { handleClic
       return null;
   }
 
-  const text = `${currency.text}`;
+  const text = currency.fullName;
   return (
     <MenuItem
       active={modifiers.active}
       disabled={modifiers.disabled}
-      label={text}
+      label={currency.title}
       text={text}
       key={currency.title}
     />
@@ -29,7 +30,7 @@ export const renderCurrency: ItemRenderer<ICurrencies> = (currency, { handleClic
 
 export const filterCurrency: ItemPredicate<ICurrencies> = (query, currency) => {
   const normalizedTitle = currency.title.toLowerCase();
-  const normalizedText = currency.text.toLowerCase();
+  const normalizedText = currency.fullName.toLowerCase();
   const normalizedQuery = query.toLowerCase();
 
   return `${normalizedTitle} ${normalizedText}`.indexOf(normalizedQuery) !== -1;
@@ -48,13 +49,12 @@ class PageConvert extends React.Component<any, any> {
   getItemList() {
     const { currencyCollection } = this.props;
     const currenciesList = currencyCollection.getCollection;
-    const currenciesFullNamesList = currencyCollection.getFullNamesCollection;
-    console.log(currenciesFullNamesList);
+    const currenciesFullNamesList = toJS(currencyCollection.getFullNamesCollection);
 
     for (let prop in currenciesList) {
-        currencySelectProps.items.push({
-          title: currenciesList[prop]['title'],
-          text: currenciesList[prop]['fullName']
+      currencySelectProps.items.push({
+        title: currenciesList[prop]['title'],
+        fullName: currenciesFullNamesList[prop]
       });
     }
   }
@@ -78,17 +78,30 @@ class PageConvert extends React.Component<any, any> {
             <Spinner intent={Intent.PRIMARY} />
           </div>
         ) : (
-          <div className="row">
-            <CurrencySelect
-              items={currencySelectProps.items}
-              itemPredicate={currencySelectProps.itemPredicate}
-              itemRenderer={currencySelectProps.itemRenderer}
-              noResults={<MenuItem disabled={true} text="No results." />}
-              onItemSelect={this.changeSelect}
-            >
-              <Button text={currencySelectProps.items[0].text} rightIcon="double-caret-vertical" />
-            </CurrencySelect>
-          </div>
+            <div className="row">
+              <div className="col-6 d-flex">
+                <CurrencySelect
+                    items={currencySelectProps.items}
+                    itemPredicate={currencySelectProps.itemPredicate}
+                    itemRenderer={currencySelectProps.itemRenderer}
+                    noResults={<MenuItem disabled={true} text="No results." />}
+                    onItemSelect={this.changeSelect}
+                >
+                    <Button text={currencySelectProps.items[0].fullName} rightIcon="double-caret-vertical" />
+                </CurrencySelect>
+              </div>
+              <div className="col-6 d-flex justify-content-end">
+                <CurrencySelect
+                    items={currencySelectProps.items}
+                    itemPredicate={currencySelectProps.itemPredicate}
+                    itemRenderer={currencySelectProps.itemRenderer}
+                    noResults={<MenuItem disabled={true} text="No results." />}
+                    onItemSelect={this.changeSelect}
+                >
+                    <Button text={currencySelectProps.items[0].fullName} rightIcon="double-caret-vertical" />
+                </CurrencySelect>
+              </div>
+            </div>
         )}
       </div>
     )

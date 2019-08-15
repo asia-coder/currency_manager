@@ -44,10 +44,10 @@ class CurrencyCollection {
 
     if (!StoreService.hasCurrenciesFullName) {
       this.getRequestCurrenciesFullNames();
+    } else {
+      const currenciesFullNames: object = StoreService.getCurrenciesFullName;
+      this.setFullNamesCollections(currenciesFullNames);
     }
-
-    const currenciesFullNames: object = StoreService.getCurrenciesFullName;
-    this.setFullNamesCollections(currenciesFullNames);
 
     const currentCurrency: string = StoreService.getCurrentCurrency();
     this.setCurrentCurrency(currentCurrency);
@@ -93,6 +93,7 @@ class CurrencyCollection {
 
     data.then(res => {
       this.setFullNamesCollections(res);
+      StoreService.setCurrenciesFullName(JSON.stringify(this.getFullNamesCollection));
     });
   }
 
@@ -105,12 +106,11 @@ class CurrencyCollection {
     });
 
     this.currenciesFullNames = currenciesArray;
-    StoreService.setCurrenciesFullName(JSON.stringify(this.getFullNamesCollection));
   }
 
   @computed
   get getFullNamesCollection() {
-    return toJS(this.currenciesFullNames);
+    return this.currenciesFullNames;
   }
 
   @action
